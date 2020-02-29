@@ -16,7 +16,6 @@ async function getActionInputs() {
   const usePrArtifacts = getInput('use-pr-artifacts', { required: false });
   const token = getInput('repo-token', { required: true });
 
-  console.log('eh?', token);
   const cwd = path.join(process.cwd(), workingDirectory);
 
   return { token, cwd, usePrArtifacts };
@@ -65,7 +64,7 @@ export default async function run() {
   try {
     const { token, cwd, usePrArtifacts } = getActionInputs();
 
-    const octokit = new GitHub(token);
+    const octokit = new GitHub({ auth: `token ${token}`});
 
     const pullRequest = await getPullRequest(context, octokit);
     const fileDiffs = await diffAssets({ pullRequest, cwd, usePrArtifacts });
