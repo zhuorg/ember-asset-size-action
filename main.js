@@ -48,6 +48,7 @@ async function commentOnPR({ octokit, pullRequest, fileDiffs }) {
       body,
     });
   } catch (e) {
+    console.error(e);
     console.log(`Could not create a comment automatically. This could be because github does not allow writing from actions on a fork.
 
 See https://github.community/t5/GitHub-Actions/Actions-not-working-correctly-for-forks/td-p/35545 for more information.`);
@@ -70,6 +71,8 @@ export default async function run() {
 
     await commentOnPR({ octokit, pullRequest, fileDiffs });
   } catch (error) {
+    console.error(error);
+
     setFailed(error.message);
   }
 }
