@@ -63,7 +63,8 @@ ${body}`);
 export default async function run() {
   try {
     const { token, cwd, usePrArtifacts } = getActionInputs();
-    core.debug(`Inputs: ${inspect(token)}`);
+    core.debug(`token: ${token}`);
+    core.debug(`cmd: ${cwd}`);
     const octokit = new GitHub(token);
 
     const pullRequest = await getPullRequest(context, octokit);
