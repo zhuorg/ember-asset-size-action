@@ -62,12 +62,7 @@ ${body}`);
 
 export default async function run() {
   try {
-    const workingDirectory = getInput('working-directory', { required: false });
-    const usePrArtifacts = getInput('use-pr-artifacts', { required: false });
-    const token = getInput('repo-token', { required: true });
-
-    const cwd = path.join(process.cwd(), workingDirectory);
-    
+     const { token, cwd, usePrArtifacts } = getActionInputs();
     debug(`token: ${token}`);
     debug(`cmd: ${cwd}`);
     const octokit = new GitHub(token);
