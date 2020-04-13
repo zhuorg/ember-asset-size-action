@@ -1,4 +1,4 @@
-import { getInput, setFailed } from '@actions/core';
+import { getInput, setFailed, debug} from '@actions/core';
 import { exec } from '@actions/exec';
 import { GitHub, context } from '@actions/github';
 import path from 'path';
@@ -62,9 +62,14 @@ ${body}`);
 
 export default async function run() {
   try {
-    const { token, cwd, usePrArtifacts } = getActionInputs();
-    core.debug(`token: ${token}`);
-    core.debug(`cmd: ${cwd}`);
+    const workingDirectory = getInput('working-directory', { required: false });
+    const usePrArtifacts = getInput('use-pr-artifacts', { required: false });
+    const token = getInput('repo-token', { required: true });
+
+    const cwd = path.join(process.cwd(), workingDirectory);
+    
+    debug(`token: ${token}`);
+    debug(`cmd: ${cwd}`);
     const octokit = new GitHub(token);
 
     const pullRequest = await getPullRequest(context, octokit);
