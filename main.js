@@ -62,14 +62,16 @@ ${body}`);
 
 export default async function run() {
   try {
-    const inputs = getActionInputs();
-    const token = inputs[0];
-    
-    debug(`token: ${token}`);
-    debug(`cmd: ${inputs[1]}`);
+    const workingDirectory = getInput('working-directory', { required: false });
+    const usePrArtifacts = getInput('use-pr-artifacts', { required: false });
+    const token = getInput('repo-token', { required: true });
+    const cwd = path.join(process.cwd(), workingDirectory);
+
     const octokit = new GitHub(token);
 
     const pullRequest = await getPullRequest(context, octokit);
+    debug(`cmd: ${cwd}`);
+    debug(`usePrArtifacts: ${usePrArtifacts}`);
     const fileDiffs = await diffAssets({ pullRequest, cwd, usePrArtifacts });
 
     await commentOnPR({ octokit, pullRequest, fileDiffs });
