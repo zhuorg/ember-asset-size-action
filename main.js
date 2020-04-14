@@ -18,7 +18,7 @@ async function getActionInputs() {
 
   const cwd = path.join(process.cwd(), workingDirectory);
 
-  return { token, cwd, usePrArtifacts };
+  return [token, cwd, usePrArtifacts];
 }
 
 async function diffAssets({ pullRequest, cwd, usePrArtifacts }) {
@@ -39,7 +39,7 @@ async function diffAssets({ pullRequest, cwd, usePrArtifacts }) {
 
 async function commentOnPR({ octokit, pullRequest, fileDiffs }) {
   const body = buildOutputText(fileDiffs);
-
+   
   try {
     await octokit.issues.createComment({
       owner: context.repo.owner,
@@ -62,9 +62,11 @@ ${body}`);
 
 export default async function run() {
   try {
-     const { token, cwd, usePrArtifacts } = getActionInputs();
+    const inputs = getActionInputs();
+    const token = inputs[0];
+    
     debug(`token: ${token}`);
-    debug(`cmd: ${cwd}`);
+    debug(`cmd: ${inputs[1]}`);
     const octokit = new GitHub(token);
 
     const pullRequest = await getPullRequest(context, octokit);
